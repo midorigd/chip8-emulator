@@ -1,6 +1,8 @@
 .vscode/
 sandbox/
 
+chip8
+
 *.o
 *.out
 *.exe
