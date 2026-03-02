@@ -2,6 +2,7 @@
 sandbox/
 
 chip8
+*.ch8
 
 *.o
 *.out
