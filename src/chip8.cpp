@@ -1,0 +1,63 @@
+#include "chip8.h"
+
+#include <cstdint>
+#include <fstream>
+#include <iostream>
+#include <string>
+
+CHIP8::CHIP8() {
+    pc = ROM_START;
+}
+
+void CHIP8::loadROM(const std::string& filename) {
+    std::ifstream romFile(filename, std::ios::binary);
+
+    if (!romFile) {
+        std::cerr << "ROM file " << filename << " not opened\n";
+        exit(1);
+    }
+
+    std::uint16_t i { 0x0 };
+
+    // read in file in chunks of 1 byte
+    while (romFile) {
+        romFile.read(reinterpret_cast<char*>(mem + ROM_START + i), 1);
+        ++i;
+    }
+}
+
+void CHIP8::loadFonts() {
+    for (size_t i = 0; i < FONT_SIZE; ++i) {
+        mem[FONT_START + i] = FONT[i];
+    }
+}
+
+void CHIP8::printROM(uint16_t start, uint16_t count) const {
+    std::cout << std::hex << std::uppercase << std::setfill('0');
+
+    for (std::uint16_t i = start; i < start + count; ++i) {
+        std::cout << "ROM[" << i << "]: 0x"
+                  << std::setw(2)
+                  << static_cast<int>(mem[i]) << '\n';
+    }
+}
+
+// font characters
+const uint8_t CHIP8::FONT[80] = {
+    0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+	0x20, 0x60, 0x20, 0x20, 0x70, // 1
+	0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+	0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+	0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+	0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+	0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+	0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+	0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+	0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+	0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+	0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+	0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+	0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+	0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+};
