@@ -8,7 +8,7 @@ int main() {
     createTestBin("test.ch8");
 
     CHIP8 chip;
-    chip.loadFonts();
+    chip.loadFont();
     chip.printROM(0x50, 82);
 
     chip.loadROM("test.ch8");

@@ -12,7 +12,7 @@ public:
     void loadROM(const std::string& filename);
 
     // Load the font characters into memory
-    void loadFonts();
+    void loadFont();
 
     // debugging
     void printROM(uint16_t start, uint16_t count) const;
@@ -32,7 +32,7 @@ private:
     // 0x0A1 - 0x1FF: unused
     // 0x200 - 0xFFF: ROM instructions + free space
 
-    // architecture 
+    // architecture
     std::uint8_t regs[16] {};      // 16 registers, V0 to VF
     std::uint8_t mem[4096] {};     // 4kB of memory
     std::uint16_t indexReg {};     // for indexing into memory

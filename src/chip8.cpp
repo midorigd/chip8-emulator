@@ -26,7 +26,7 @@ void CHIP8::loadROM(const std::string& filename) {
     }
 }
 
-void CHIP8::loadFonts() {
+void CHIP8::loadFont() {
     for (size_t i = 0; i < FONT_SIZE; ++i) {
         mem[FONT_START + i] = FONT[i];
     }
@@ -43,7 +43,7 @@ void CHIP8::printROM(uint16_t start, uint16_t count) const {
 }
 
 // font characters
-const uint8_t CHIP8::FONT[80] = {
+const uint8_t CHIP8::FONT[FONT_SIZE] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
 	0x20, 0x60, 0x20, 0x20, 0x70, // 1
 	0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
