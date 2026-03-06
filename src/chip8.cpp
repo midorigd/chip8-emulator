@@ -1,12 +1,16 @@
 #include "chip8.h"
 
+#include <chrono>
 #include <cstdint>
 #include <fstream>
 #include <iostream>
+#include <random>
 #include <string>
 
-CHIP8::CHIP8() {
+CHIP8::CHIP8() : rng(std::chrono::system_clock::now().time_since_epoch().count()) {
     pc = ROM_START;
+
+    rngByte = std::uniform_int_distribution<uint8_t>(0, 255U);
 }
 
 void CHIP8::loadROM(const std::string& filename) {
@@ -17,7 +21,7 @@ void CHIP8::loadROM(const std::string& filename) {
         exit(1);
     }
 
-    std::uint16_t i { 0x0 };
+    uint16_t i { 0x0 };
 
     // read in file in chunks of 1 byte
     while (romFile) {
@@ -32,10 +36,97 @@ void CHIP8::loadFont() {
     }
 }
 
+uint16_t CHIP8::opGetAddr() const {
+    return opcode & 0x0FFF;
+}
+
+uint8_t CHIP8::opGetN() const {
+    return opcode & 0x000F;
+}
+
+uint8_t CHIP8::opGetX() const {
+    return (opcode >> 8) & 0x000F;
+}
+
+uint8_t CHIP8::opGetY() const {
+    return (opcode >> 4) & 0x000F;
+}
+
+uint8_t CHIP8::opGetKK() const {
+    return opcode & 0x00FF;
+}
+
+void CHIP8::OP_CLS() {
+    memset(display, 0, sizeof(display));
+}
+
+void CHIP8::OP_RET() {
+    --sp;
+    pc = stack[sp];
+}
+
+void CHIP8::OP_JP() {
+    pc = opGetAddr();
+}
+
+void CHIP8::OP_CALL() {
+    stack[sp] = pc;
+    ++sp;
+    pc = opGetAddr();
+}
+
+void CHIP8::OP_SEvb() {
+    if (regs[opGetX()] == opGetKK()) {
+        pc += 2;
+    }
+}
+
+void CHIP8::OP_SNEvb() {
+    if (regs[opGetX()] != opGetKK()) {
+        pc += 2;
+    }
+}
+
+void CHIP8::OP_SEvv() {
+    if (regs[opGetX()] == regs[opGetY()]) {
+        pc += 2;
+    }
+}
+
+void CHIP8::OP_LDvb() {
+    regs[opGetX()] = opGetKK();
+}
+
+void CHIP8::OP_ADDvb() {
+    regs[opGetX()] += opGetKK();
+}
+
+void CHIP8::OP_LDvv() {
+    regs[opGetX()] = regs[opGetY()];
+}
+
+void CHIP8::OP_OR() {
+    regs[opGetX()] |= regs[opGetY()];
+}
+
+void CHIP8::OP_AND() {
+    regs[opGetX()] &= regs[opGetY()];
+}
+
+void CHIP8::OP_XOR() {
+    regs[opGetX()] ^= regs[opGetY()];
+}
+
+// void CHIP8::OP_ADDvv() {
+//     regs[opGetX()] += regs[opGetY()];
+
+//     if (regs[opg])
+// }
+
 void CHIP8::printROM(uint16_t start, uint16_t count) const {
     std::cout << std::hex << std::uppercase << std::setfill('0');
 
-    for (std::uint16_t i = start; i < start + count; ++i) {
+    for (uint16_t i = start; i < start + count; ++i) {
         std::cout << "ROM[" << i << "]: 0x"
                   << std::setw(2)
                   << static_cast<int>(mem[i]) << '\n';

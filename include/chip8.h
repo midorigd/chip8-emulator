@@ -1,7 +1,9 @@
 #ifndef CHIP8_H
 #define CHIP8_H
 
+#include <chrono>
 #include <cstdint>
+#include <random>
 #include <string>
 
 class CHIP8 {
@@ -16,6 +18,52 @@ public:
 
     // debugging
     void printROM(uint16_t start, uint16_t count) const;
+
+    // Getters for fields of opcode
+    uint16_t opGetAddr() const;
+    uint8_t opGetN() const;
+    uint8_t opGetX() const;
+    uint8_t opGetY() const;
+    uint8_t opGetKK() const;
+
+    // 
+    // INSTRUCTION SET
+    // 
+
+    void OP_CLS();
+    void OP_RET();
+    void OP_JP();
+    void OP_CALL();
+    void OP_SEvb();
+    void OP_SNEvb();
+    void OP_SEvv();
+    void OP_LDvb();
+    void OP_ADDvb();
+    void OP_LDvv();
+    void OP_OR();
+    void OP_AND();
+    void OP_XOR();
+    void OP_ADDvv();
+    void OP_SUBvv();
+    void OP_SHR();
+    void OP_SUBN();
+    void OP_SHL();
+    void OP_SNEvv();
+    void OP_LDi();
+    void OP_JPv();
+    void OP_RND();
+    void OP_DRW();
+    void OP_SKP();
+    void OP_SKNP();
+    void OP_LDvd();
+    void OP_LDvk();
+    void OP_LDdv();
+    void OP_LDsv();
+    void OP_ADDiv();
+    void OP_LDfv();
+    void OP_LDbv();
+    void OP_LDiv();
+    void OP_LDvi();
 
 private:
     // predefined constants
@@ -33,20 +81,24 @@ private:
     // 0x200 - 0xFFF: ROM instructions + free space
 
     // architecture
-    std::uint8_t regs[16] {};      // 16 registers, V0 to VF
-    std::uint8_t mem[4096] {};     // 4kB of memory
-    std::uint16_t indexReg {};     // for indexing into memory
-    std::uint16_t pc;              // program counter
-    std::uint16_t stack[16] {};    // 16-cell stack
-    std::uint8_t sp {};            // stack pointer
+    uint8_t regs[16] {};      // 16 registers, V0 to VF
+    uint8_t mem[4096] {};     // 4kB of memory
+    uint16_t indexReg {};     // for indexing into memory
+    uint16_t pc;              // program counter
+    uint16_t stack[16] {};    // 16-cell stack
+    uint8_t sp {};            // stack pointer
 
-    std::uint16_t opcode {};
+    uint16_t opcode {};
 
     // timing and I/O
-    std::uint8_t delayTimer {};        //
-    std::uint8_t soundTimer {};        //
+    uint8_t delayTimer {};        //
+    uint8_t soundTimer {};        //
     bool keyMap[16] {};                // input key mappings
-    std::uint32_t display[64 * 32] {}; // 64x32 screen
+    uint32_t display[64 * 32] {}; // 64x32 screen
+
+    // RNG engine
+    std::default_random_engine rng;
+    std::uniform_int_distribution<uint8_t> rngByte;
 };
 
 #endif
