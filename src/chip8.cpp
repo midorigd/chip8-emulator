@@ -117,11 +117,63 @@ void CHIP8::OP_XOR() {
     regs[opGetX()] ^= regs[opGetY()];
 }
 
-// void CHIP8::OP_ADDvv() {
-//     regs[opGetX()] += regs[opGetY()];
+void CHIP8::OP_ADDvv() {
+    uint8_t x { opGetX() };
+    uint8_t y { opGetY() };
 
-//     if (regs[opg])
-// }
+    uint8_t result { regs[x] + regs[y] };
+
+    // set overflow flag
+    regs[0xF] = (result < regs[x]);
+
+    regs[x] = result;
+}
+
+void CHIP8::OP_SUB() {
+    uint8_t x { opGetX() };
+    uint8_t y { opGetY() };
+
+    // set NOT borrow flag
+    regs[0xF] = (regs[x] > regs[y]);
+
+    regs[x] -= regs[y];
+}
+
+void CHIP8::OP_SHR() {
+    uint8_t x { opGetX() };
+
+    // set VF to LSB of Vx
+    regs[0xF] = regs[x] & 1;
+
+    regs[x] >>= 1;
+}
+
+void CHIP8::OP_SUBN() {
+    uint8_t x { opGetX() };
+    uint8_t y { opGetY() };
+
+    // set NOT borrow flag
+    regs[0xF] = (regs[y] > regs[x]);
+
+    regs[x] = regs[y] - regs[x];
+}
+
+void CHIP8::OP_SHL() {
+    uint8_t x { opGetX() };
+
+    // set VF to MSB of Vx
+    regs[0xF] = regs[x] & 0x80;
+
+    regs[x] <<= 1;
+}
+
+void CHIP8::OP_SNEvv() {
+    if (regs[opGetX()] != regs[opGetY()]) {
+        pc += 2;
+    }
+}
+
+// void CHIP8::OP_LDi() {}
 
 void CHIP8::printROM(uint16_t start, uint16_t count) const {
     std::cout << std::hex << std::uppercase << std::setfill('0');

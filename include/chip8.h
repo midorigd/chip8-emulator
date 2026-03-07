@@ -44,7 +44,7 @@ public:
     void OP_AND();
     void OP_XOR();
     void OP_ADDvv();
-    void OP_SUBvv();
+    void OP_SUB();
     void OP_SHR();
     void OP_SUBN();
     void OP_SHL();
