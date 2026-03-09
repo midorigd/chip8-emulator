@@ -31,7 +31,7 @@ void CHIP8::loadROM(const std::string& filename) {
 }
 
 void CHIP8::loadFont() {
-    for (size_t i = 0; i < FONT_SIZE; ++i) {
+    for (uint16_t i = 0; i < FONT_SIZE; ++i) {
         mem[FONT_START + i] = FONT[i];
     }
 }
@@ -174,7 +174,7 @@ void CHIP8::OP_SNEvv() {
 }
 
 void CHIP8::OP_LDi() {
-    regs[regIndex] = opGetAddr();
+    indexReg = opGetAddr();
 }
 
 void CHIP8::OP_JPv() {
@@ -194,7 +194,7 @@ void CHIP8::OP_RND() {
 //     uint8_t overwrite { 0 };
 
 //     for (size_t i = 0; i < spriteSize; ++i) {
-//         uint8_t pixel { mem[regs[regIndex] + i] };
+//         uint8_t pixel { mem[regs[indexReg] + i] };
 
 //         if (display[addr] && pixel) {
 //             overwrite = 1;
@@ -213,6 +213,33 @@ void CHIP8::OP_SKNP() {
     if (!keyMap[regs[opGetX()]]) {
         pc += 2;
     }
+}
+
+void CHIP8::OP_LDvd() {
+    regs[opGetX()] = delayTimer;
+}
+
+void CHIP8::OP_LDvk() {
+    uint8_t key;
+
+    // wait for input
+    do {
+        key = keyPressed();
+    } while (key == KEYMAP_SIZE);
+
+    regs[opGetX()] = key;
+}
+
+void CHIP8::OP_LDsv() {
+    regs[opGetX()] = soundTimer;
+}
+
+void CHIP8::OP_ADDiv() {
+    indexReg += regs[opGetX()];
+}
+
+void CHIP8::OP_LDfv() {
+    indexReg = FONT_START + regs[opGetX()] * FONT_HEIGHT;
 }
 
 void CHIP8::printROM(uint16_t start, uint16_t count) const {

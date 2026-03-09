@@ -31,6 +31,16 @@ public:
         return (y * DISP_WIDTH + x) % (DISP_WIDTH * DISP_HEIGHT);
     }
 
+    // Finds which key has been pressed, or returns out-of-range key if none found
+    uint8_t keyPressed() const {
+        for (size_t i = 0; i < KEYMAP_SIZE; ++i) {
+            if (keyMap[i]) {
+                return i;
+            }
+        }
+        return KEYMAP_SIZE;
+    }
+
     // 
     // INSTRUCTION SET
     // 
@@ -74,10 +84,13 @@ private:
     // predefined constants
     static constexpr uint16_t ROM_START { 0x200 };
     static constexpr uint16_t FONT_START { 0x050 };
+    static constexpr uint8_t FONT_HEIGHT { 5 };
     static constexpr uint16_t FONT_SIZE { 80 };
 
     static constexpr uint8_t DISP_WIDTH { 64 };
     static constexpr uint8_t DISP_HEIGHT { 32 };
+
+    static constexpr uint8_t KEYMAP_SIZE { 16 };
 
     // font characters
     static const uint8_t FONT[FONT_SIZE];
@@ -91,7 +104,7 @@ private:
     // architecture
     uint8_t regs[16] {};      // 16 registers, V0 to VF
     uint8_t mem[4096] {};     // 4kB of memory
-    uint16_t regIndex {};     // for indexing into memory
+    uint16_t indexReg {};     // for indexing into memory
     uint16_t pc;              // program counter
     uint16_t stack[16] {};    // 16-cell stack
     uint8_t sp {};            // stack pointer
@@ -101,7 +114,7 @@ private:
     // timing and I/O
     uint8_t delayTimer {};        //
     uint8_t soundTimer {};        //
-    bool keyMap[16] {};                // input key mappings
+    bool keyMap[KEYMAP_SIZE] {};                // input key mappings
     uint32_t display[DISP_WIDTH * DISP_HEIGHT] {}; // 64x32 screen
 
     // RNG engine
