@@ -26,6 +26,11 @@ public:
     uint8_t opGetY() const;
     uint8_t opGetKK() const;
 
+    // Calculate memory address corresponding to given display coordinates
+    uint16_t getDisplayAddr(uint8_t x, uint8_t y) const {
+        return (y * DISP_WIDTH + x) % (DISP_WIDTH * DISP_HEIGHT);
+    }
+
     // 
     // INSTRUCTION SET
     // 
@@ -67,9 +72,12 @@ public:
 
 private:
     // predefined constants
-    static const uint16_t ROM_START { 0x200 };
-    static const uint16_t FONT_START { 0x050 };
-    static const size_t FONT_SIZE { 80 };
+    static constexpr uint16_t ROM_START { 0x200 };
+    static constexpr uint16_t FONT_START { 0x050 };
+    static constexpr uint16_t FONT_SIZE { 80 };
+
+    static constexpr uint8_t DISP_WIDTH { 64 };
+    static constexpr uint8_t DISP_HEIGHT { 32 };
 
     // font characters
     static const uint8_t FONT[FONT_SIZE];
@@ -83,7 +91,7 @@ private:
     // architecture
     uint8_t regs[16] {};      // 16 registers, V0 to VF
     uint8_t mem[4096] {};     // 4kB of memory
-    uint16_t indexReg {};     // for indexing into memory
+    uint16_t regIndex {};     // for indexing into memory
     uint16_t pc;              // program counter
     uint16_t stack[16] {};    // 16-cell stack
     uint8_t sp {};            // stack pointer
@@ -94,7 +102,7 @@ private:
     uint8_t delayTimer {};        //
     uint8_t soundTimer {};        //
     bool keyMap[16] {};                // input key mappings
-    uint32_t display[64 * 32] {}; // 64x32 screen
+    uint32_t display[DISP_WIDTH * DISP_HEIGHT] {}; // 64x32 screen
 
     // RNG engine
     std::default_random_engine rng;

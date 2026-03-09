@@ -21,7 +21,7 @@ void CHIP8::loadROM(const std::string& filename) {
         exit(1);
     }
 
-    uint16_t i { 0x0 };
+    uint16_t i { 0 };
 
     // read in file in chunks of 1 byte
     while (romFile) {
@@ -173,7 +173,47 @@ void CHIP8::OP_SNEvv() {
     }
 }
 
-// void CHIP8::OP_LDi() {}
+void CHIP8::OP_LDi() {
+    regs[regIndex] = opGetAddr();
+}
+
+void CHIP8::OP_JPv() {
+    pc = opGetAddr() + regs[0];
+}
+
+void CHIP8::OP_RND() {
+    regs[opGetX()] = rngByte(rng) & opGetKK();
+}
+
+// FIX THIS
+
+// void CHIP8::OP_DRW() {
+//     uint8_t spriteSize { opGetN() };
+//     uint16_t addr { getDisplayAddr(regs[opGetX()], regs[opGetY()]) };
+
+//     uint8_t overwrite { 0 };
+
+//     for (size_t i = 0; i < spriteSize; ++i) {
+//         uint8_t pixel { mem[regs[regIndex] + i] };
+
+//         if (display[addr] && pixel) {
+//             overwrite = 1;
+//             display[addr] = 0;
+//         }
+//     }
+// }
+
+void CHIP8::OP_SKP() {
+    if (keyMap[regs[opGetX()]]) {
+        pc += 2;
+    }
+}
+
+void CHIP8::OP_SKNP() {
+    if (!keyMap[regs[opGetX()]]) {
+        pc += 2;
+    }
+}
 
 void CHIP8::printROM(uint16_t start, uint16_t count) const {
     std::cout << std::hex << std::uppercase << std::setfill('0');
