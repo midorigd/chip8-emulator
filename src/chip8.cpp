@@ -75,13 +75,13 @@ void CHIP8::OP_CALL() {
     pc = opGetAddr();
 }
 
-void CHIP8::OP_SEvb() {
+void CHIP8::OP_SEvk() {
     if (regs[opGetX()] == opGetKK()) {
         pc += 2;
     }
 }
 
-void CHIP8::OP_SNEvb() {
+void CHIP8::OP_SNEvk() {
     if (regs[opGetX()] != opGetKK()) {
         pc += 2;
     }
@@ -93,11 +93,11 @@ void CHIP8::OP_SEvv() {
     }
 }
 
-void CHIP8::OP_LDvb() {
+void CHIP8::OP_LDvk() {
     regs[opGetX()] = opGetKK();
 }
 
-void CHIP8::OP_ADDvb() {
+void CHIP8::OP_ADDvk() {
     regs[opGetX()] += opGetKK();
 }
 
@@ -240,6 +240,32 @@ void CHIP8::OP_ADDiv() {
 
 void CHIP8::OP_LDfv() {
     indexReg = FONT_START + regs[opGetX()] * FONT_HEIGHT;
+}
+
+void CHIP8::OP_LDbv() {
+    uint8_t val { regs[opGetX()] };
+    int mod { 100 };
+
+    for (int i = 0; i < 3; ++i) {
+        mem[indexReg + i] = val / mod;
+        mod /= 10;
+    }
+}
+
+void CHIP8::OP_LDiv() {
+    uint8_t x { opGetX() };
+
+    for (uint8_t i = 0; i <= x; ++i) {
+        mem[indexReg + i] = regs[i];
+    }
+}
+
+void CHIP8::OP_LDvi() {
+    uint8_t x { opGetX() };
+
+    for (uint8_t i = 0; i <= x; ++i) {
+        regs[i] = mem[indexReg + i];
+    }
 }
 
 void CHIP8::printROM(uint16_t start, uint16_t count) const {
