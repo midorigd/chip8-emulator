@@ -28,7 +28,7 @@ public:
 
     // Calculate memory address corresponding to given display coordinates
     uint16_t getDisplayAddr(uint8_t x, uint8_t y) const {
-        return (y * DISP_WIDTH + x) % (DISP_WIDTH * DISP_HEIGHT);
+        return y * DISP_WIDTH + x;
     }
 
     // Finds which key has been pressed, or returns out-of-range key if none found

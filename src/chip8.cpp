@@ -185,23 +185,35 @@ void CHIP8::OP_RND() {
     regs[opGetX()] = rngByte(rng) & opGetKK();
 }
 
-// FIX THIS
+void CHIP8::OP_DRW() {
+    uint8_t spriteSize { opGetN() };
+    uint8_t xPos { regs[opGetX()] };
+    uint8_t yPos { regs[opGetY()] };
 
-// void CHIP8::OP_DRW() {
-//     uint8_t spriteSize { opGetN() };
-//     uint16_t addr { getDisplayAddr(regs[opGetX()], regs[opGetY()]) };
+    uint8_t overwrite { 0 };
 
-//     uint8_t overwrite { 0 };
+    // draw each pixel in the byte
+    uint8_t byte { mem[indexReg] };
 
-//     for (size_t i = 0; i < spriteSize; ++i) {
-//         uint8_t pixel { mem[regs[indexReg] + i] };
+    for (size_t i = 0; i < 8; ++i) {
+        yPos = (yPos + i) % DISP_WIDTH;
+        uint16_t addr { getDisplayAddr(xPos, yPos) };
 
-//         if (display[addr] && pixel) {
-//             overwrite = 1;
-//             display[addr] = 0;
-//         }
-//     }
-// }
+        // get MSB from byte, this is the current pixel to draw
+        uint8_t pixel = byte & 0x80;
+
+        // check for collisions and raise overwrite flag
+        if (display[addr] && pixel) {
+            overwrite = 1;
+            display[addr] = 0;
+
+        } else if (pixel) {
+            display[addr] = 0xFFFFFFFF;
+        }
+
+        pixel <<= 1;
+    }
+}
 
 void CHIP8::OP_SKP() {
     if (keyMap[regs[opGetX()]]) {
