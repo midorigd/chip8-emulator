@@ -7,10 +7,12 @@
 #include <random>
 #include <string>
 
+// CHECK: does it matter if in initializer list?
 CHIP8::CHIP8() : rng(std::chrono::system_clock::now().time_since_epoch().count()) {
     pc = ROM_START;
-
     rngByte = std::uniform_int_distribution<uint8_t>(0, 255U);
+
+    loadFont();
 }
 
 void CHIP8::loadROM(const std::string& filename) {
@@ -121,7 +123,7 @@ void CHIP8::OP_ADDvv() {
     uint8_t x { opGetX() };
     uint8_t y { opGetY() };
 
-    uint8_t result { regs[x] + regs[y] };
+    uint8_t result { static_cast<uint8_t>(regs[x] + regs[y]) };
 
     // set overflow flag
     regs[0xF] = (result < regs[x]);
@@ -192,26 +194,36 @@ void CHIP8::OP_DRW() {
 
     uint8_t overwrite { 0 };
 
-    // draw each pixel in the byte
-    uint8_t byte { mem[indexReg] };
+    for (size_t i = 0; i < spriteSize; ++i) {
+        // CHECK: switch x and y?
+        yPos = (yPos + i) % DISP_HEIGHT;
 
-    for (size_t i = 0; i < 8; ++i) {
-        yPos = (yPos + i) % DISP_WIDTH;
-        uint16_t addr { getDisplayAddr(xPos, yPos) };
+        // get next byte, each byte is one row of the sprite
+        uint8_t byte { mem[indexReg + i] };
 
-        // get MSB from byte, this is the current pixel to draw
-        uint8_t pixel = byte & 0x80;
+        // draw each pixel in the byte
+        for (size_t j = 0; j < 8; ++j) {
+            xPos = (xPos + j) % DISP_WIDTH;
+            uint16_t addr { getDisplayAddr(xPos, yPos) };
 
-        // check for collisions and raise overwrite flag
-        if (display[addr] && pixel) {
-            overwrite = 1;
-            display[addr] = 0;
+            // get MSB from byte, this is the current pixel to draw
+            uint8_t pixel = byte & 0x80;
 
-        } else if (pixel) {
-            display[addr] = 0xFFFFFFFF;
+            // pixels are XORed onto display
+            if (display[addr] && pixel) {
+                // check for collisions and raise overwrite flag
+                overwrite = 1;
+                display[addr] = 0;
+
+            } else if (pixel) {
+                display[addr] = 0xFFFFFFFF;
+            }
+
+            byte <<= 1;
         }
 
-        pixel <<= 1;
+        // CHECK: overwrite flag stored into VF
+        regs[0xF] = overwrite;
     }
 }
 
@@ -231,7 +243,8 @@ void CHIP8::OP_LDvd() {
     regs[opGetX()] = delayTimer;
 }
 
-void CHIP8::OP_LDvk() {
+// CHECK: naming
+void CHIP8::OP_LDvkey() {
     uint8_t key;
 
     // wait for input
@@ -240,6 +253,11 @@ void CHIP8::OP_LDvk() {
     } while (key == KEYMAP_SIZE);
 
     regs[opGetX()] = key;
+}
+
+// CHECK: is this right
+void CHIP8::OP_LDdv() {
+    delayTimer = regs[opGetX()];
 }
 
 void CHIP8::OP_LDsv() {
@@ -286,8 +304,11 @@ void CHIP8::printROM(uint16_t start, uint16_t count) const {
     for (uint16_t i = start; i < start + count; ++i) {
         std::cout << "ROM[" << i << "]: 0x"
                   << std::setw(2)
-                  << static_cast<int>(mem[i]) << '\n';
+                  << static_cast<int>(mem[i])
+                  << ((i % 4 == 3) ? '\n' : '\t');
     }
+
+    std::cout << '\n';
 }
 
 // font characters

@@ -71,7 +71,7 @@ public:
     void OP_SKP();
     void OP_SKNP();
     void OP_LDvd();
-    void OP_LDvk();
+    void OP_LDvkey();
     void OP_LDdv();
     void OP_LDsv();
     void OP_ADDiv();
