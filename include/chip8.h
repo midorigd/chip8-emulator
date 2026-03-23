@@ -16,6 +16,15 @@ public:
     // Load the font characters into memory
     void loadFont();
 
+    // Create the function pointer table used as the central control statement for simulation
+    void createPointerTable();
+
+    // Helper functions for pointer table opcode decoding
+    void opFunc0();
+    void opFunc8();
+    void opFuncE();
+    void opFuncF();
+
     // debugging
     void printROM(uint16_t start, uint16_t count) const;
     void printRegs() const;
@@ -86,6 +95,14 @@ private:
 
     // font characters
     static const uint8_t FONT[FONT_SIZE];
+
+    // pointer tables for opcode decoding
+    using opFunc = void (CHIP8::*)();
+    static opFunc map[16];
+    static opFunc map0[15];
+    static opFunc mapE[15];
+    static opFunc map8[15];
+    static opFunc mapF[0x66];
 
     // memory structure
     // 0x000 - 0x04F: unused
