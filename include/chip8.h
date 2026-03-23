@@ -18,6 +18,7 @@ public:
 
     // debugging
     void printROM(uint16_t start, uint16_t count) const;
+    void printRegs() const;
 
     // Getters for fields of opcode
     uint16_t opGetAddr() const;
@@ -27,19 +28,10 @@ public:
     uint8_t opGetKK() const;
 
     // Calculate memory address corresponding to given display coordinates
-    uint16_t getDisplayAddr(uint8_t x, uint8_t y) const {
-        return y * DISP_WIDTH + x;
-    }
+    uint16_t getDisplayAddr(uint8_t x, uint8_t y) const;
 
     // Finds which key has been pressed, or returns out-of-range key if none found
-    uint8_t keyPressed() const {
-        for (size_t i = 0; i < KEYMAP_SIZE; ++i) {
-            if (keyMap[i]) {
-                return i;
-            }
-        }
-        return KEYMAP_SIZE;
-    }
+    uint8_t keyPressed() const;
 
     // 
     // INSTRUCTION SET
@@ -112,10 +104,10 @@ private:
     uint16_t opcode {};
 
     // timing and I/O
-    uint8_t delayTimer {};        //
-    uint8_t soundTimer {};        //
-    bool keyMap[KEYMAP_SIZE] {};                // input key mappings
-    uint32_t display[DISP_WIDTH * DISP_HEIGHT] {}; // 64x32 screen
+    uint8_t delayTimer {};                          //
+    uint8_t soundTimer {};                          //
+    bool keyMap[KEYMAP_SIZE] {};                    // input key mappings
+    uint32_t display[DISP_WIDTH * DISP_HEIGHT] {};  // 64 x 32 screen
 
     // RNG engine
     std::default_random_engine rng;

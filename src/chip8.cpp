@@ -58,6 +58,19 @@ uint8_t CHIP8::opGetKK() const {
     return opcode & 0x00FF;
 }
 
+uint16_t CHIP8::getDisplayAddr(uint8_t x, uint8_t y) const {
+    return y * DISP_WIDTH + x;
+}
+
+uint8_t CHIP8::keyPressed() const {
+    for (size_t i = 0; i < KEYMAP_SIZE; ++i) {
+        if (keyMap[i]) {
+            return i;
+        }
+    }
+    return KEYMAP_SIZE;
+}
+
 void CHIP8::OP_CLS() {
     memset(display, 0, sizeof(display));
 }
@@ -195,7 +208,6 @@ void CHIP8::OP_DRW() {
     uint8_t overwrite { 0 };
 
     for (size_t i = 0; i < spriteSize; ++i) {
-        // CHECK: switch x and y?
         yPos = (yPos + i) % DISP_HEIGHT;
 
         // get next byte, each byte is one row of the sprite
@@ -221,10 +233,10 @@ void CHIP8::OP_DRW() {
 
             byte <<= 1;
         }
-
-        // overwrite flag stored into VF
-        regs[0xF] = overwrite;
     }
+
+    // overwrite flag stored into VF
+    regs[0xF] = overwrite;
 }
 
 void CHIP8::OP_SKP() {
@@ -307,6 +319,16 @@ void CHIP8::printROM(uint16_t start, uint16_t count) const {
     }
 
     std::cout << '\n';
+}
+
+void CHIP8::printRegs() const {
+    std::cout << std::hex << std::uppercase << std::setfill('0');
+
+    for (uint8_t i = 0; i < 16; ++i) {
+        std::cout << 'V' << i << ": 0x"
+                  << static_cast<int>(regs[i])
+                  << ((i % 4 == 3) ? '\n' : '\t');
+    }
 }
 
 // font characters
