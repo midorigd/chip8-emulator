@@ -49,11 +49,11 @@ public:
     void OP_RET();
     void OP_JP();
     void OP_CALL();
-    void OP_SEvk();
-    void OP_SNEvk();
+    void OP_SEvb();
+    void OP_SNEvb();
     void OP_SEvv();
-    void OP_LDvk();
-    void OP_ADDvk();
+    void OP_LDvb();
+    void OP_ADDvb();
     void OP_LDvv();
     void OP_OR();
     void OP_AND();
@@ -71,7 +71,7 @@ public:
     void OP_SKP();
     void OP_SKNP();
     void OP_LDvd();
-    void OP_LDvkey();
+    void OP_LDvk();
     void OP_LDdv();
     void OP_LDsv();
     void OP_ADDiv();

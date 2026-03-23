@@ -7,11 +7,11 @@
 #include <random>
 #include <string>
 
-// CHECK: does it matter if in initializer list?
-CHIP8::CHIP8() : rng(std::chrono::system_clock::now().time_since_epoch().count()) {
-    pc = ROM_START;
-    rngByte = std::uniform_int_distribution<uint8_t>(0, 255U);
+CHIP8::CHIP8() :
+    rng(std::chrono::system_clock::now().time_since_epoch().count()),
+    rngByte(0, 255) {
 
+    pc = ROM_START;
     loadFont();
 }
 
@@ -77,13 +77,13 @@ void CHIP8::OP_CALL() {
     pc = opGetAddr();
 }
 
-void CHIP8::OP_SEvk() {
+void CHIP8::OP_SEvb() {
     if (regs[opGetX()] == opGetKK()) {
         pc += 2;
     }
 }
 
-void CHIP8::OP_SNEvk() {
+void CHIP8::OP_SNEvb() {
     if (regs[opGetX()] != opGetKK()) {
         pc += 2;
     }
@@ -95,11 +95,11 @@ void CHIP8::OP_SEvv() {
     }
 }
 
-void CHIP8::OP_LDvk() {
+void CHIP8::OP_LDvb() {
     regs[opGetX()] = opGetKK();
 }
 
-void CHIP8::OP_ADDvk() {
+void CHIP8::OP_ADDvb() {
     regs[opGetX()] += opGetKK();
 }
 
@@ -222,7 +222,7 @@ void CHIP8::OP_DRW() {
             byte <<= 1;
         }
 
-        // CHECK: overwrite flag stored into VF
+        // overwrite flag stored into VF
         regs[0xF] = overwrite;
     }
 }
@@ -243,8 +243,7 @@ void CHIP8::OP_LDvd() {
     regs[opGetX()] = delayTimer;
 }
 
-// CHECK: naming
-void CHIP8::OP_LDvkey() {
+void CHIP8::OP_LDvk() {
     uint8_t key;
 
     // wait for input
@@ -255,7 +254,6 @@ void CHIP8::OP_LDvkey() {
     regs[opGetX()] = key;
 }
 
-// CHECK: is this right
 void CHIP8::OP_LDdv() {
     delayTimer = regs[opGetX()];
 }
