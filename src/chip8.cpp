@@ -38,32 +38,72 @@ void CHIP8::loadFont() {
     }
 }
 
-// void CHIP8::createPointerTable() {
-//     // main pointer table
-//     map[0x0] = CHIP8::OP_JP;
-//     map[0x1] = CHIP8::opFunc0;
-//     map[0x2] = CHIP8::OP_CALL;
-//     map[0x3] = CHIP8::OP_SEvb;
-//     map[0x4] = CHIP8::OP_SNEvb;
-//     map[0x5] = CHIP8::OP_SEvv;
-//     map[0x6] = CHIP8::OP_LDvb;
-//     map[0x7] = CHIP8::OP_ADDvb;
-//     map[0x8] = CHIP8::opFunc8;
-//     map[0x9] = CHIP8::OP_SNEvv;
-//     map[0xA] = CHIP8::OP_LDi;
-//     map[0xB] = CHIP8::OP_JPv;
-//     map[0xC] = CHIP8::OP_RND;
-//     map[0xD] = CHIP8::OP_DRW;
-//     map[0xE] = CHIP8::opFuncE;
-//     map[0xF] = CHIP8::opFuncF;
+void CHIP8::createPointerTable() {
+    // main pointer table
+    map[0x0] = &CHIP8::OP_JP;
+    map[0x1] = &CHIP8::opFunc0;
+    map[0x2] = &CHIP8::OP_CALL;
+    map[0x3] = &CHIP8::OP_SEvb;
+    map[0x4] = &CHIP8::OP_SNEvb;
+    map[0x5] = &CHIP8::OP_SEvv;
+    map[0x6] = &CHIP8::OP_LDvb;
+    map[0x7] = &CHIP8::OP_ADDvb;
+    map[0x8] = &CHIP8::opFunc8;
+    map[0x9] = &CHIP8::OP_SNEvv;
+    map[0xA] = &CHIP8::OP_LDi;
+    map[0xB] = &CHIP8::OP_JPv;
+    map[0xC] = &CHIP8::OP_RND;
+    map[0xD] = &CHIP8::OP_DRW;
+    map[0xE] = &CHIP8::opFuncE;
+    map[0xF] = &CHIP8::opFuncF;
 
-//     // 0-opcode pointer table
-//     map0[0x0] = CHIP8::OP_CLS;
-//     map0[0XE] = CHIP8::OP_RET;
+    // 0-opcode pointer table
+    map0[0x0] = &CHIP8::OP_CLS;
+    map0[0XE] = &CHIP8::OP_RET;
 
-//     // 8-opcode pointer table
+    // 8-opcode pointer table
+    map8[0x0] = &CHIP8::OP_LDvv;
+    map8[0x1] = &CHIP8::OP_OR;
+    map8[0x2] = &CHIP8::OP_AND;
+    map8[0x3] = &CHIP8::OP_XOR;
+    map8[0x4] = &CHIP8::OP_ADDvv;
+    map8[0x5] = &CHIP8::OP_SUB;
+    map8[0x6] = &CHIP8::OP_SHR;
+    map8[0x7] = &CHIP8::OP_SUBN;
+    map8[0xE] = &CHIP8::OP_SHL;
 
-// }
+    // E-opcode pointer table
+    mapE[0x1] = &CHIP8::OP_SKNP;
+    mapE[0xE] = &CHIP8::OP_SKP;
+
+    // F-opcode pointer table
+    mapF[0x07] = &CHIP8::OP_LDvd;
+    mapF[0x0A] = &CHIP8::OP_LDvk;
+    mapF[0x15] = &CHIP8::OP_LDdv;
+    mapF[0x18] = &CHIP8::OP_LDsv;
+    mapF[0x1E] = &CHIP8::OP_ADDiv;
+    mapF[0x29] = &CHIP8::OP_LDfv;
+    mapF[0x33] = &CHIP8::OP_LDbv;
+    mapF[0x55] = &CHIP8::OP_LDiv;
+    mapF[0x65] = &CHIP8::OP_LDvi;
+
+}
+
+void CHIP8::opFunc0() {
+    (this->*(map0[opGetN()]))();
+}
+
+void CHIP8::opFunc8() {
+    (this->*(map8[opGetN()]))();
+}
+
+void CHIP8::opFuncE() {
+    (this->*(mapE[opGetN()]))();
+}
+
+void CHIP8::opFuncF() {
+    (this->*(mapF[opGetKK()]))();
+}
 
 uint16_t CHIP8::opGetAddr() const {
     return opcode & 0x0FFF;
