@@ -38,32 +38,32 @@ void CHIP8::loadFont() {
     }
 }
 
-void CHIP8::createPointerTable() {
-    // main pointer table
-    map[0x0] = CHIP8::OP_JP;
-    map[0x1] = CHIP8::opFunc0;
-    map[0x2] = CHIP8::OP_CALL;
-    map[0x3] = CHIP8::OP_SEvb;
-    map[0x4] = CHIP8::OP_SNEvb;
-    map[0x5] = CHIP8::OP_SEvv;
-    map[0x6] = CHIP8::OP_LDvb;
-    map[0x7] = CHIP8::OP_ADDvb;
-    map[0x8] = CHIP8::opFunc8;
-    map[0x9] = CHIP8::OP_SNEvv;
-    map[0xA] = CHIP8::OP_LDi;
-    map[0xB] = CHIP8::OP_JPv;
-    map[0xC] = CHIP8::OP_RND;
-    map[0xD] = CHIP8::OP_DRW;
-    map[0xE] = CHIP8::opFuncE;
-    map[0xF] = CHIP8::opFuncF;
+// void CHIP8::createPointerTable() {
+//     // main pointer table
+//     map[0x0] = CHIP8::OP_JP;
+//     map[0x1] = CHIP8::opFunc0;
+//     map[0x2] = CHIP8::OP_CALL;
+//     map[0x3] = CHIP8::OP_SEvb;
+//     map[0x4] = CHIP8::OP_SNEvb;
+//     map[0x5] = CHIP8::OP_SEvv;
+//     map[0x6] = CHIP8::OP_LDvb;
+//     map[0x7] = CHIP8::OP_ADDvb;
+//     map[0x8] = CHIP8::opFunc8;
+//     map[0x9] = CHIP8::OP_SNEvv;
+//     map[0xA] = CHIP8::OP_LDi;
+//     map[0xB] = CHIP8::OP_JPv;
+//     map[0xC] = CHIP8::OP_RND;
+//     map[0xD] = CHIP8::OP_DRW;
+//     map[0xE] = CHIP8::opFuncE;
+//     map[0xF] = CHIP8::opFuncF;
 
-    // 0-opcode pointer table
-    map0[0x0] = CHIP8::OP_CLS;
-    map0[0XE] = CHIP8::OP_RET;
+//     // 0-opcode pointer table
+//     map0[0x0] = CHIP8::OP_CLS;
+//     map0[0XE] = CHIP8::OP_RET;
 
-    // 8-opcode pointer table
+//     // 8-opcode pointer table
 
-}
+// }
 
 uint16_t CHIP8::opGetAddr() const {
     return opcode & 0x0FFF;
@@ -352,7 +352,8 @@ void CHIP8::printRegs() const {
     std::cout << std::hex << std::uppercase << std::setfill('0');
 
     for (uint8_t i = 0; i < 16; ++i) {
-        std::cout << 'V' << i << ": 0x"
+        std::cout << 'V' << static_cast<int>(i) << ": 0x"
+                  << std::setw(2)
                   << static_cast<int>(regs[i])
                   << ((i % 4 == 3) ? '\n' : '\t');
     }
