@@ -1,4 +1,5 @@
 #include "chip8.h"
+#include "platform.h"
 #include "utils.h"
 
 #include <fstream>
@@ -13,4 +14,6 @@ int main() {
     chip.printROM(0x50, 82);
     chip.printROM(0x200, 18);
     chip.printRegs();
+
+    Platform::test();
 }

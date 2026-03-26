@@ -438,3 +438,10 @@ const uint8_t CHIP8::FONT[FONT_SIZE] = {
 	0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
 	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
+
+// definitions for pointer tables to enable them being static members
+CHIP8::opFunc CHIP8::map[16] {};
+CHIP8::opFunc CHIP8::map0[15] {};
+CHIP8::opFunc CHIP8::mapE[15] {};
+CHIP8::opFunc CHIP8::map8[15] {};
+CHIP8::opFunc CHIP8::mapF[0x66] {};

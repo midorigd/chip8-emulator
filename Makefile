@@ -1,8 +1,12 @@
 # Compiler
 CXX = clang++
 
+# SDL libraries
+SDL_CFLAGS := $(shell sdl2-config --cflags)
+SDL_LIBS := $(shell sdl2-config --libs)
+
 # Compiler flags
-CXXFLAGS = -fcolor-diagnostics -fansi-escape-codes -Wall -Wextra -std=c++17 -Iinclude -g
+CXXFLAGS = -fcolor-diagnostics -fansi-escape-codes -Wall -Wextra -std=c++17 -Iinclude -g $(SDL_CFLAGS)
 # -Wextra
 
 # Custom flags
@@ -21,7 +25,7 @@ EXEC = chip8
 # all: $(EXEC)
 
 $(EXEC): $(SRC)
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(EXEC)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(EXEC) $(SDL_LIBS)
 
 # # Link step
 # $(EXEC): $(OBJ)
@@ -33,4 +37,5 @@ $(EXEC): $(SRC)
 
 # Clean rule
 clean:
-	@rm -f $(OBJ) $(TARGET)
+	@rm -f $(OBJ)
+# 	@rm -f $(OBJ) $(EXEC)

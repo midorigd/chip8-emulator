@@ -8,6 +8,10 @@
 
 class CHIP8 {
 public:
+    // predefined constants
+    static constexpr uint8_t DISP_WIDTH { 64 };
+    static constexpr uint8_t DISP_HEIGHT { 32 };
+
     CHIP8();
 
     // Load a binary instruction file into chip's ROM
@@ -90,9 +94,6 @@ private:
     static constexpr uint16_t FONT_START { 0x050 };
     static constexpr uint8_t FONT_HEIGHT { 5 };
     static constexpr uint16_t FONT_SIZE { 80 };
-
-    static constexpr uint8_t DISP_WIDTH { 64 };
-    static constexpr uint8_t DISP_HEIGHT { 32 };
 
     static constexpr uint8_t KEYMAP_SIZE { 16 };
 
