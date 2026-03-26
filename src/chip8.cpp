@@ -13,6 +13,7 @@ CHIP8::CHIP8() :
 
     pc = ROM_START;
     loadFont();
+    createPointerTable();
 }
 
 void CHIP8::loadROM(const std::string& filename) {
@@ -90,19 +91,38 @@ void CHIP8::createPointerTable() {
 }
 
 void CHIP8::opFunc0() {
-    (this->*(map0[opGetN()]))();
+    ( this->*( map0[opGetN()] ) )();
 }
 
 void CHIP8::opFunc8() {
-    (this->*(map8[opGetN()]))();
+    ( this->*( map8[opGetN()] ) )();
 }
 
 void CHIP8::opFuncE() {
-    (this->*(mapE[opGetN()]))();
+    ( this->*( mapE[opGetN()] ) )();
 }
 
 void CHIP8::opFuncF() {
-    (this->*(mapF[opGetKK()]))();
+    ( this->*( mapF[opGetKK()] ) )();
+}
+
+void CHIP8::runCycle() {
+    // opcode stored as two bytes
+    opcode = (mem[pc & 0x0FFF] << 8) | mem[pc + 1];
+
+    pc += 2;
+
+    // use opcode to get correct function pointer and execute
+    ( this->*( map[(opcode & 0xF000) >> 12] ) )();
+
+    // timers decrement on every cycle
+    if (delayTimer > 0) {
+        --delayTimer;
+    }
+
+    if (soundTimer > 0) {
+        --soundTimer;
+    }
 }
 
 uint16_t CHIP8::opGetAddr() const {

@@ -25,7 +25,10 @@ public:
     void opFuncE();
     void opFuncF();
 
-    // debugging
+    // Simulate one full processor cycle
+    void runCycle();
+
+    // Debugging functions to print memory/registers
     void printROM(uint16_t start, uint16_t count) const;
     void printRegs() const;
 
