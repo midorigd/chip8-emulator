@@ -16,7 +16,10 @@ public:
     ~Platform();
 
     // update
+    void update(const void* pixels, int pitch);
+
     // processinput
+    bool processInput(bool* keyMap);
 
 private:
     // platform parameters
