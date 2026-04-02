@@ -40,6 +40,7 @@ void chipTest() {
 void platformTest() {
     Platform platform("testWindow", 20);
     uint32_t testDisplay[CHIP8::DISP_WIDTH * CHIP8::DISP_HEIGHT] {};
+    bool testKeyboard[16] {};
 
     for (int i = 0; i < CHIP8::DISP_WIDTH * CHIP8::DISP_HEIGHT; i++) {
         testDisplay[i] = ((i % 2) == (i / CHIP8::DISP_WIDTH % 2)) ? 0xFFFFFFFF : 0x00000000;
@@ -48,11 +49,15 @@ void platformTest() {
     int dispPitch { sizeof(uint32_t) * CHIP8::DISP_WIDTH };
     platform.update(testDisplay, dispPitch);
 
-    SDL_Event e;
-    bool quit { false };
-    while (!quit) {
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) quit = true;
+    bool quit;
+    do {
+        quit = platform.processInput(testKeyboard);
+    } while (!quit);
+
+    std::cout << "keys pressed: ";
+    for (int i = 0; i < 16; ++i) {
+        if (testKeyboard[i]) {
+            std::cout << i << ' ';
         }
     }
 }

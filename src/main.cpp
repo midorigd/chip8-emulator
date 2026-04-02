@@ -15,8 +15,6 @@ namespace {
 }
 
 int main(int argc, char** argv) {
-    // platformTest();
-
     if (!(argc == 3 || argc == 4)) {
         std::cout << "Usage: ./chip8 <clock speed (Hz)> <ROM filename> [scale]\n";
         exit(1);
