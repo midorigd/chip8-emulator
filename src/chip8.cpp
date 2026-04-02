@@ -162,6 +162,10 @@ bool* CHIP8::getKeyMap() {
     return keyMap;
 }
 
+const uint32_t* CHIP8::getDisplay() const {
+    return display;
+}
+
 void CHIP8::OP_CLS() {
     memset(display, 0, sizeof(display));
 }

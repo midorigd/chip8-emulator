@@ -52,6 +52,9 @@ public:
     // Returns a pointer to the keyMap array for the platform to update
     bool* getKeyMap();
 
+    // Returns a pointer to the display array
+    const uint32_t* getDisplay() const;
+
     // 
     // INSTRUCTION SET
     // 

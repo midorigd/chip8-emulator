@@ -11,7 +11,7 @@ public:
     static void test();
 
     // constructor
-    Platform(const std::string& windowTitle, unsigned scale = DEFAULT_SCALE);
+    Platform(const std::string& windowTitle, unsigned scale);
 
     // destructor
     ~Platform();
@@ -24,9 +24,9 @@ public:
 
 private:
     // platform parameters
-    static constexpr unsigned DEFAULT_SCALE { 20 };
-    static constexpr unsigned WINDOW_WIDTH { CHIP8::DISP_WIDTH * DEFAULT_SCALE };
-    static constexpr unsigned WINDOW_HEIGHT { CHIP8::DISP_HEIGHT * DEFAULT_SCALE };
+    // static constexpr unsigned DEFAULT_SCALE { 20 };
+    // static constexpr unsigned WINDOW_WIDTH { CHIP8::DISP_WIDTH * DEFAULT_SCALE };
+    // static constexpr unsigned WINDOW_HEIGHT { CHIP8::DISP_HEIGHT * DEFAULT_SCALE };
 
     // SDL platform attributes
     SDL_Window* window;
