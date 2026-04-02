@@ -4,16 +4,27 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 
-int main() {
-    createTestBin("test.ch8");
+int main(int argc, char** argv) {
+    if (argc != 3) {
+        std::cout << "Usage: ./chip8 <clock speed (Hz)> <ROM filename>\n";
+        exit(1);
+    }
+
+    int delay { 1000 / std::stoi(argv[1]) };
+    std::string romFilename { argv[2] };
 
     CHIP8 chip;
-    chip.loadROM("test.ch8");
+    Platform platform("CHIP8Window");
 
-    chip.printROM(0x50, 82);
-    chip.printROM(0x200, 18);
-    chip.printRegs();
+    chip.loadROM(romFilename);
 
-    Platform::test();
+    bool quit { false };
+
+    while (!quit) {
+        quit = platform.processInput(chip.getKeyMap());
+
+        chip.runCycle();
+    }
 }

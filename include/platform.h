@@ -4,13 +4,14 @@
 #include "chip8.h"
 
 #include <SDL.h>
+#include <string>
 
 class Platform {
 public:
     static void test();
 
     // constructor
-    Platform();
+    Platform(const std::string& windowTitle, unsigned scale = DEFAULT_SCALE);
 
     // destructor
     ~Platform();
@@ -23,17 +24,13 @@ public:
 
 private:
     // platform parameters
-    static constexpr unsigned SCALE { 20 };
-    static constexpr unsigned WINDOW_WIDTH { CHIP8::DISP_WIDTH * SCALE };
-    static constexpr unsigned WINDOW_HEIGHT { CHIP8::DISP_HEIGHT * SCALE };
+    static constexpr unsigned DEFAULT_SCALE { 20 };
+    static constexpr unsigned WINDOW_WIDTH { CHIP8::DISP_WIDTH * DEFAULT_SCALE };
+    static constexpr unsigned WINDOW_HEIGHT { CHIP8::DISP_HEIGHT * DEFAULT_SCALE };
 
-    // window
+    // SDL platform attributes
     SDL_Window* window;
-
-    // renderer
     SDL_Renderer* renderer;
-
-    // texture
     SDL_Texture* texture;
 };
 

@@ -1,4 +1,6 @@
 #include "utils.h"
+#include "chip8.h"
+#include "platform.h"
 
 #include <fstream>
 #include <iostream>
@@ -19,4 +21,17 @@ void createTestBin(const std::string& filename) {
     }
 
     binFile.close();
+}
+
+void chipTest() {
+    createTestBin("test.ch8");
+
+    CHIP8 chip;
+    chip.loadROM("test.ch8");
+
+    chip.printROM(0x50, 82);
+    chip.printROM(0x200, 18);
+    chip.printRegs();
+
+    Platform::test();
 }

@@ -158,6 +158,10 @@ uint8_t CHIP8::keyPressed() const {
     return KEYMAP_SIZE;
 }
 
+bool* CHIP8::getKeyMap() {
+    return keyMap;
+}
+
 void CHIP8::OP_CLS() {
     memset(display, 0, sizeof(display));
 }

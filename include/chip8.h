@@ -49,6 +49,9 @@ public:
     // Finds which key has been pressed, or returns out-of-range key if none found
     uint8_t keyPressed() const;
 
+    // Returns a pointer to the keyMap array for the platform to update
+    bool* getKeyMap();
+
     // 
     // INSTRUCTION SET
     // 
