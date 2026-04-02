@@ -297,20 +297,21 @@ void CHIP8::OP_RND() {
 
 void CHIP8::OP_DRW() {
     uint8_t spriteSize { opGetN() };
-    uint8_t xPos { regs[opGetX()] };
-    uint8_t yPos { regs[opGetY()] };
+    uint8_t baseX { regs[opGetX()] };
+    uint8_t baseY { regs[opGetY()] };
 
+    uint8_t xPos, yPos;
     uint8_t overwrite { 0 };
 
     for (size_t i = 0; i < spriteSize; ++i) {
-        yPos = (yPos + i) % DISP_HEIGHT;
+        yPos = (baseY + i) % DISP_HEIGHT;
 
         // get next byte, each byte is one row of the sprite
         uint8_t byte { mem[indexReg + i] };
 
         // draw each pixel in the byte
         for (size_t j = 0; j < 8; ++j) {
-            xPos = (xPos + j) % DISP_WIDTH;
+            xPos = (baseX + j) % DISP_WIDTH;
             uint16_t addr { getDisplayAddr(xPos, yPos) };
 
             // get MSB from byte, this is the current pixel to draw

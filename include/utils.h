@@ -9,4 +9,7 @@ void createTestBin(const std::string& filename);
 // Basic CHIP8 module test, loads and prints ROM
 void chipTest();
 
+// Basic platform test, displays a checkerboard pattern
+void platformTest();
+
 #endif

@@ -29,9 +29,9 @@ private:
     // static constexpr unsigned WINDOW_HEIGHT { CHIP8::DISP_HEIGHT * DEFAULT_SCALE };
 
     // SDL platform attributes
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    SDL_Texture* texture;
+    SDL_Window* window {};
+    SDL_Renderer* renderer {};
+    SDL_Texture* texture {};
 };
 
 #endif

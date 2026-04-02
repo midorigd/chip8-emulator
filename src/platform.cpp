@@ -10,10 +10,28 @@ void Platform::test() {
 }
 
 Platform::Platform(const std::string& windowTitle, unsigned scale) {
-    SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO);
+    if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO) < 0) {
+        std::cerr << "SDL_Init failed: " << SDL_GetError() << "\n";
+        exit(1);
+    }
+
     window = SDL_CreateWindow(windowTitle.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, CHIP8::DISP_WIDTH * scale, CHIP8::DISP_HEIGHT * scale, 0);
+    if (!window) {
+        std::cerr << "SDL_CreateWindow failed: " << SDL_GetError() << "\n";
+        exit(1);
+    }
+
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (!renderer) {
+        std::cerr << "SDL_CreateRenderer failed: " << SDL_GetError() << "\n";
+        exit(1);
+    }
+
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, CHIP8::DISP_WIDTH, CHIP8::DISP_HEIGHT);
+    if (!texture) {
+        std::cerr << "SDL_CreateTexture failed: " << SDL_GetError() << "\n";
+        exit(1);
+    }
 }
 
 Platform::~Platform() {

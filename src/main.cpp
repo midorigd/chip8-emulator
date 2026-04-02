@@ -11,10 +11,12 @@ using steady_clock = std::chrono::steady_clock;
 using ms = std::chrono::duration<double, std::milli>;
 
 namespace {
-    constexpr int DEFAULT_SCALE { 10 };
+    constexpr int DEFAULT_SCALE { 20 };
 }
 
 int main(int argc, char** argv) {
+    // platformTest();
+
     if (!(argc == 3 || argc == 4)) {
         std::cout << "Usage: ./chip8 <clock speed (Hz)> <ROM filename> [scale]\n";
         exit(1);
@@ -28,6 +30,8 @@ int main(int argc, char** argv) {
     Platform platform("CHIP8Window", scale);
 
     chip.loadROM(romFilename);
+
+    // chip.printROM(0x200, 18);
 
     bool quit { false };
     auto lastCycleTime { steady_clock::now() };
