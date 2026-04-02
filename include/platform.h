@@ -10,16 +10,16 @@ class Platform {
 public:
     static void test();
 
-    // constructor
+    // Creates a new SDL window with the given window title and scaling factor
     Platform(const std::string& windowTitle, unsigned scale);
 
-    // destructor
+    // Cleanup for the SDL platform attributes
     ~Platform();
 
-    // update
+    // Updates the display rendering based on the display array and pitch
     void update(const void* pixels, int pitch);
 
-    // processinput
+    // Reads keyboard input from the user and stores it into the keymap array
     bool processInput(bool* keyMap);
 
 private:
