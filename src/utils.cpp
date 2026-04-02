@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <SDL.h>
 #include <string>
 #include <vector>
 
@@ -38,16 +39,20 @@ void chipTest() {
 
 void platformTest() {
     Platform platform("testWindow", 20);
-    SDL_PumpEvents();
-    SDL_Delay(2000);
-
     uint32_t testDisplay[CHIP8::DISP_WIDTH * CHIP8::DISP_HEIGHT] {};
 
     for (int i = 0; i < CHIP8::DISP_WIDTH * CHIP8::DISP_HEIGHT; i++) {
-        testDisplay[i] = (i % 2 == 0) ? 0xFFFFFFFF : 0x00000000;
+        testDisplay[i] = ((i % 2) == (i / CHIP8::DISP_WIDTH % 2)) ? 0xFFFFFFFF : 0x00000000;
     }
 
     int dispPitch { sizeof(uint32_t) * CHIP8::DISP_WIDTH };
     platform.update(testDisplay, dispPitch);
-    SDL_Delay(3000); // hold for 3 seconds
+
+    SDL_Event e;
+    bool quit { false };
+    while (!quit) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) quit = true;
+        }
+    }
 }

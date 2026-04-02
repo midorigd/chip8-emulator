@@ -14,6 +14,8 @@ CHIP8::CHIP8() :
     pc = ROM_START;
     loadFont();
     createPointerTable();
+
+    display[0] = 0xFFFFFFFF;
 }
 
 void CHIP8::loadROM(const std::string& filename) {
